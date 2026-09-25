@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>さつきあん ゲストガイド QRシート(A4印刷用)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --bg:#F4F7F5;
+    --surface:#FFFFFF;
+    --ink:#16302E;
+    --ink-soft:#4B615E;
+    --line:#D8E3DF;
+    --teal:#0E7C86;
+    --teal-ink:#075059;
+    --coral:#FF6A4D;
+    --gold:#C98A1E;
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; background:#DCE4E1; color:var(--ink);
+    font-family:'Noto Sans JP','Noto Sans',sans-serif;
+  }
+  .toolbar{
+    max-width:210mm; margin:16px auto 0; padding:0 12px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .toolbar p{ font-size:13px; color:#3A4A48; margin:0; }
+  .toolbar button{
+    font-family:inherit; font-size:14px; font-weight:600; cursor:pointer;
+    background:var(--teal); color:#fff; border:none; border-radius:10px; padding:10px 18px;
+  }
+  .page{
+    width:210mm; min-height:297mm; margin:16px auto 40px; background:var(--surface);
+    box-shadow:0 4px 24px rgba(22,48,46,.18);
+    padding:20mm 18mm; display:flex; flex-direction:column; align-items:center;
+    position:relative; overflow:hidden;
+  }
+  .minsa{
+    position:absolute; left:0; right:0; height:6mm;
+    background-image: repeating-linear-gradient(90deg, var(--teal) 0 8px, transparent 8px 16px, var(--coral) 16px 24px, transparent 24px 32px, var(--teal) 32px 40px, transparent 40px 48px, var(--gold) 48px 56px, transparent 56px 64px);
+    opacity:.75;
+  }
+  .minsa.top{ top:0; }
+  .minsa.bottom{ bottom:0; }
+
+  .eyebrow{
+    margin-top:6mm;
+    font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--teal-ink);
+    border:1px solid var(--line); border-radius:999px; padding:5px 16px;
+  }
+  h1.property{
+    font-family:'Zen Maru Gothic','Noto Sans JP',sans-serif;
+    font-size:38px; margin:14px 0 2px; color:var(--ink);
+  }
+  h1.property .place{ color:var(--teal); }
+
+  .titles{
+    display:flex; flex-direction:column; align-items:center; gap:2px; margin:10px 0 8mm;
+  }
+  .titles .ttl-ja{ font-family:'Zen Maru Gothic',sans-serif; font-size:26px; font-weight:700; color:var(--coral); }
+  .titles .ttl-row{ display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+  .titles .ttl-row span{ font-size:15px; color:var(--ink-soft); }
+  .titles .ttl-row .en{ font-family:'Noto Sans',sans-serif; font-weight:700; }
+  .titles .ttl-row .zh{ font-family:'Noto Sans TC',sans-serif; font-weight:700; }
+  .titles .ttl-row .ko{ font-family:'Noto Sans KR',sans-serif; font-weight:700; }
+
+  .qrframe{
+    border:2px solid var(--teal); border-radius:20px; padding:10mm;
+    display:flex; align-items:center; justify-content:center; background:#fff;
+    box-shadow:0 2px 10px rgba(14,124,134,.12);
+  }
+  #qrcode{ width:60mm; height:60mm; }
+  #qrcode img{ width:60mm !important; height:60mm !important; }
+
+  .scan-instructions{
+    margin-top:8mm; display:flex; flex-direction:column; gap:6px; align-items:center; text-align:center;
+  }
+  .scan-instructions .line{ display:flex; align-items:center; gap:8px; font-size:15px; color:var(--ink); }
+  .scan-instructions svg{ width:19px; height:19px; color:var(--teal); flex:none; }
+  .scan-instructions .en,.scan-instructions .zh,.scan-instructions .ko{ color:var(--ink-soft); font-size:14px; }
+  .scan-instructions .zh{ font-family:'Noto Sans TC',sans-serif; }
+  .scan-instructions .ko{ font-family:'Noto Sans KR',sans-serif; }
+
+  .url-box{
+    margin-top:7mm; font-family:ui-monospace,'SFMono-Regular',Consolas,monospace;
+    font-size:13px; color:var(--teal-ink); background:var(--bg); border:1px solid var(--line);
+    border-radius:10px; padding:8px 16px;
+  }
+
+  .spacer{ flex:1; }
+
+  .footer{
+    width:100%; text-align:center; padding-top:8mm; border-top:1px solid var(--line);
+    display:flex; flex-direction:column; gap:3px;
+  }
+  .footer .fname{ font-family:'Zen Maru Gothic',sans-serif; color:var(--teal-ink); font-weight:700; font-size:15px; }
+  .footer .faddr{ font-size:12px; color:var(--ink-soft); }
+
+  @media print{
+    html,body{ background:#fff; }
+    .toolbar{ display:none; }
+    .page{ margin:0; box-shadow:none; width:auto; min-height:auto; }
+    @page{ size:A4; margin:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <p>プレビュー画面です。印刷ボタン(またはCtrl+P / Cmd+P)からA4で印刷・PDF保存できます。</p>
+  <button type="button" onclick="window.print()">印刷する</button>
+</div>
+
+<div class="page">
+  <div class="minsa top"></div>
+
+  <span class="eyebrow">Check-in Guide</span>
+  <h1 class="property">さつきあん <span class="place">宮古島</span></h1>
+
+  <div class="titles">
+    <div class="ttl-ja">お客様ガイド</div>
+    <div class="ttl-row">
+      <span class="en">Guest Guide</span>
+      <span class="zh">住客專用指南</span>
+      <span class="ko">투숙객 가이드</span>
+    </div>
+  </div>
+
+  <div class="qrframe">
+    <div id="qrcode"></div>
+  </div>
+
+  <div class="scan-instructions">
+    <div class="line">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6.5" width="17" height="13" rx="2"/><circle cx="12" cy="13" r="3.4"/><path d="M8.5 6.5 9.7 4.5h4.6l1.2 2"/></svg>
+      <span>スマートフォンのカメラで、上のQRコードを読み取ってください</span>
+    </div>
+    <span class="en">Scan the QR code above with your phone's camera</span>
+    <span class="zh">請用手機相機掃描上方的 QR Code</span>
+    <span class="ko">스마트폰 카메라로 위의 QR코드를 스캔해 주세요</span>
+  </div>
+
+  <div class="url-box">satsukianmiyakojima-dot.github.io/satsukian-guide</div>
+
+  <div class="spacer"></div>
+
+  <div class="footer">
+    <span class="fname">さつきあん宮古島</span>
+    <span class="faddr">沖縄県宮古島市下地川満879 ・ 070-8350-6509</span>
+  </div>
+
+  <div class="minsa bottom"></div>
+</div>
+
+<script>
+  new QRCode(document.getElementById("qrcode"), {
+    text: "https://satsukianmiyakojima-dot.github.io/satsukian-guide/",
+    width: 500,
+    height: 500,
+    colorDark: "#16302E",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+</body>
+</html>

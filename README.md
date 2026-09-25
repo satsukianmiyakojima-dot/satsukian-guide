@@ -17,7 +17,6 @@
 | ファイル | 内容 |
 |---|---|
 | `index.html` | ガイド本体。HTML・CSS・JavaScriptがこの1ファイルに入っています(ビルド不要) |
-| `content/satsukian_guide_content.xlsx` | ガイドの文言のもとになるデータ(4言語) |
 | `print/guest-guide-qr.html` | チェックイン時に渡すA4のQRコードシート(ブラウザで開いて印刷) |
 
 ## 見る・編集する
