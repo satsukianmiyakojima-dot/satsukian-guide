@@ -103,6 +103,13 @@
     padding:7px 14px; border-radius:999px; cursor:pointer; font-size:13px; font-weight:500;
   }
   .langbtn[aria-pressed="true"]{ background:var(--teal); border-color:var(--teal); color:#fff; }
+  .roombar{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:12px; }
+  .roombar .rlabel{ font-size:13px; color:var(--ink-soft); margin-right:2px; }
+  .roombtn{
+    border:1.5px solid var(--line); background:var(--surface); color:var(--ink);
+    padding:7px 14px; border-radius:999px; cursor:pointer; font-size:13px; font-weight:600;
+  }
+  .roombtn[aria-pressed="true"]{ background:var(--coral); border-color:var(--coral); color:#fff; }
 
   nav.tabs{
     position:sticky; top:0; z-index:5;
@@ -131,9 +138,9 @@
     padding:22px; box-shadow:var(--shadow);
   }
   .card + .card{ margin-top:16px; }
-  section.panel > h2{ font-size:22px; margin:0 0 4px; display:flex; align-items:center; gap:10px; }
-  section.panel > h2 svg{ width:22px; height:22px; color:var(--teal); flex:none; }
-  section.panel > p.lead{ color:var(--ink-soft); margin:0 0 20px; }
+  section.panel h2{ font-size:22px; margin:0 0 4px; display:flex; align-items:center; gap:10px; }
+  section.panel h2 svg{ width:22px; height:22px; color:var(--teal); flex:none; }
+  section.panel p.lead{ color:var(--ink-soft); margin:0 0 20px; }
 
   .roomgrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; margin-bottom:6px; }
   .roomcard{
@@ -267,6 +274,7 @@
     <h1 class="title disp">さつきあん <span style="color:var(--teal)">宮古島</span></h1>
     <p class="tagline" id="tagline"></p>
     <div class="langbar" id="langbar"></div>
+    <div class="roombar" id="roombar"></div>
   </div>
 </header>
 
@@ -283,6 +291,7 @@
 
 <script>
 const ICON = {
+  grill:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16a8 8 0 0 1-16 0Z"/><path d="M8 17.5 6.5 21M16 17.5l1.5 3.5M12 18v3"/><path d="M9 3.5c-.8 1 .8 2-0 3M12 3c-.8 1 .8 2 0 3M15 3.5c-.8 1 .8 2 0 3"/></svg>',
   home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-9"/><path d="M10 20v-6h4v6"/></svg>',
   clipboard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4.5" width="12" height="16" rx="2"/><rect x="9" y="3" width="6" height="3" rx="1"/><path d="m9 13 2 2 4-4.5"/></svg>',
   wifi:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9a13 13 0 0 1 17 0"/><path d="M6.5 12.7a8.5 8.5 0 0 1 11 0"/><path d="M9.7 16.3a4 4 0 0 1 4.6 0"/><circle cx="12" cy="19.2" r="1" fill="currentColor" stroke="none"/></svg>',
@@ -327,7 +336,7 @@ const PHONE_EMG = "090-5655-0299";
 const T = {
 ja:{
   eyebrow:"ご宿泊のお客様専用ガイド", tagline:"1000坪を超える敷地で、最大30名までの贅沢な時間を。",
-  nav:{guide:"ご案内",rules:"ハウスルール",wifi:"Wi-Fi",faq:"よくある質問",contact:"お問い合わせ"},
+  nav:{guide:"ご案内",rules:"ハウスルール",bbq:"BBQ",wifi:"Wi-Fi",faq:"よくある質問",contact:"お問い合わせ"},
   langName:"日本語",
   consent:{title:"チェックイン時の確認",lead:"快適で安全なご滞在のため、以下の重要事項をご確認ください。",items:["室内は全面禁煙です。","22時以降は静かにお過ごしください。","ビーチの砂は足洗い場で落としてから入室してください。","ゴミは分別し、指定の場所へ出してください。","緊急時は安全を確保したうえで、119または110へ通報してください。"],agree:"確認してゲストガイドを見る",required:"すべての項目にチェックしてください"},
   roomSelect:"お部屋を選択", roomNone:"未選択",
@@ -351,7 +360,7 @@ ja:{
     items:[
       {t:"チェックイン・チェックアウト", li:["チェックインは15:00以降、チェックアウトは10:00までです。","時間を変更する場合は、事前にご相談ください。","チェックアウト時間を過ぎた場合、1時間につき1,000円の延長料金が発生します。"]},
       {t:"禁煙", li:["室内は全面禁煙です。"]},
-      {t:"騒音・マナー", li:["22時以降は静かにお過ごしください。","大音量でのテレビ・音楽・パーティーは禁止です。","他の宿泊者および近隣住民の迷惑になる行為は禁止です。"]},
+      {t:"騒音・マナー", li:["22時以降は静かにお過ごしください。","大音量でのテレビ・音楽・パーティーは禁止です。","他の宿泊者および近隣住民の迷惑になる行為は禁止です。","建物の構造上、足音が響きやすいのでお気を付けください。"]},
       {t:"ご滞在中", li:["ビーチの砂は所定の足洗い場で落としてから入室してください。","使用した調理器具や皿等は洗浄してください(蟻等の虫が発生します)。","家具等を移動した場合、チェックアウト時には元の位置にお戻しください。","チェックアウト時は施錠せず、鍵は所定の位置にお戻しください。","敷地内のコインランドリーもご利用いただけます。洗濯400円/乾燥100円(10分)。","バーベキュー器材やアウトドア用品は敷地内に限り、貸出可能です。","Wi-Fiの接続については「Wi-Fi」ページをご覧ください。"]},
       {t:"ゴミの分別・処理", li:["ゴミは分別してください(ペットボトルのラベルとキャップは燃えるゴミです)。","指定のゴミ袋をご利用ください。","ゴミは室内に置かず、敷地内のゴミ一時置き場に出してください。"]},
       {t:"設備・備品の利用", li:["設備・備品は大切にお使いください。破損や紛失があった場合は実費を請求することがあります。","退室時にはエアコン・照明を消し、窓とドアを閉めてください。"]},
@@ -361,6 +370,13 @@ ja:{
       {t:"その他", li:["マナー違反や設備破損があった場合、今後のご利用をお断りする場合があります。","当施設のルールを守って、快適で安全なご滞在をお楽しみください。"]},
     ],
   },
+  bbq:{ title:"BBQのご案内", lead:"ご宿泊のお客様は、BBQを無料でお楽しみいただけます。安全に楽しむため、以下のルールをお守りください。",
+    overview:[["料金","無料"],["場所","①BBQエリア(敷地内の東屋の隣) ②201号室の玄関前(201号室にご宿泊のお客様のみ)"],["利用時間","21:00までに終了してください(炭は火がついたままで構いません)"],["事前連絡","必要です。ご予約時にお使いのメッセージで、ご利用の日時をお知らせください。空きがあれば当日もご利用いただけます(当日の場合は午前中までにご連絡ください)。先に別のご予約がある場合は、日程の変更をお願いすることがあります。"]],
+    lendTitle:"貸出品(無料)", lend:"BBQコンロ、テーブル・椅子、照明、トング、ライター",
+    bringTitle:"お客様にご用意いただくもの", bring:"炭、食材、食器類(皿・箸・コップなど)",
+    afterTitle:"終了後のお片付け", after:["炭はコンロに残したままで結構です","ゴミは分別して、指定の袋に入れてください","お借りになった貸出品は元の場所へお戻しください"],
+    noteTitle:"お願い", notes:["21:00までに必ず終了してください","大音量で音楽を流すことは禁止です(近所の方へのご配慮をお願いします)"],
+    footer:"ご不明な点は、お気軽にスタッフまでお問い合わせください。" },
   wifi:{ title:"Wi-Fi案内", lead:"お部屋を選択すると、対応するWi-Fi情報が表示されます。", selectPrompt:"上の「お部屋を選択」からお部屋をお選びください。", extraTitle:"つながらない場合はこちらもお試しください", show:"表示", hide:"隠す", copy:"コピー", copied:"コピーしました" },
   faq:{ title:"よくある質問", lead:"キーワードで検索できます。", searchPh:"検索(例:Wi-Fi、駐車場、ゴミ)",
     items:[
@@ -370,7 +386,7 @@ ja:{
       {q:"室内でタバコを吸えますか?",a:"申し訳ございませんが、室内は全面禁煙です。"},
       {q:"ペットを連れて行けますか?",a:"申し訳ございませんが、ペットの同伴はご遠慮いただいております。"},
       {q:"洗濯はできますか?",a:"敷地内のコインランドリーがご利用いただけます(洗濯400円/乾燥100円・10分)。"},
-      {q:"BBQ器材は借りられますか?",a:"敷地内限定でバーベキュー器材やアウトドア用品の貸出が可能です。"},
+      {q:"BBQ器材は借りられますか?",a:"BBQコンロ等を無料で貸し出しています(要事前連絡)。詳しくは「BBQ」タブをご覧ください。"},
       {q:"ゴミはどうすればいいですか?",a:"分別のうえ、指定のゴミ袋で敷地内のゴミ一時置き場にお出しください。"},
       {q:"空港からどのくらいかかりますか?",a:"宮古空港から車で約8分です。"},
       {q:"ビーチまでどのくらいですか?",a:"与那覇前浜ビーチまで車で約10分です。"},
@@ -386,7 +402,7 @@ ja:{
 },
 en:{
   eyebrow:"Guest Guide", tagline:"A generous stay for up to 30 guests on over 3,300㎡ of grounds.",
-  nav:{guide:"Guide",rules:"House Rules",wifi:"Wi-Fi",faq:"FAQ",contact:"Contact"},
+  nav:{guide:"Guide",rules:"House Rules",bbq:"BBQ",wifi:"Wi-Fi",faq:"FAQ",contact:"Contact"},
   langName:"English",
   consent:{title:"Check-in confirmation",lead:"Please review these important points for a comfortable and safe stay.",items:["Smoking is not permitted indoors.","Please keep quiet after 10:00 PM.","Please rinse beach sand off at the foot-washing area before entering.","Please sort your trash and take it to the designated area.","In an emergency, secure your safety first, then call 119 or 110."],agree:"I understand and open the guest guide",required:"Please check every item first"},
   roomSelect:"Select your room", roomNone:"Not selected",
@@ -410,7 +426,7 @@ en:{
     items:[
       {t:"Check-in / Check-out", li:["Check-in from 3:00 PM, check-out by 10:00 AM.","Please contact us in advance to change these times.","A late fee of ¥1,000 per hour applies after 10:00 AM."]},
       {t:"No smoking", li:["Smoking is not permitted indoors."]},
-      {t:"Noise & courtesy", li:["Please keep quiet after 10:00 PM.","Loud TV, music or parties are not allowed.","Please do not disturb other guests or neighbours."]},
+      {t:"Noise & courtesy", li:["Please keep quiet after 10:00 PM.","Loud TV, music or parties are not allowed.","Please do not disturb other guests or neighbours.","Due to the building's structure, footsteps carry easily — please walk quietly."]},
       {t:"During your stay", li:["Please rinse sand off at the designated foot-washing area before entering.","Please wash any cookware and dishes you use (to avoid ants and insects).","If you move furniture, please return it to its original place at check-out.","Please do not lock up at check-out — return the key to its designated spot.","A coin laundry is available on site (wash ¥400 / dry ¥100 per 10 min).","BBQ equipment and outdoor gear can be borrowed for use on the grounds only.","See the Wi-Fi page for connection details."]},
       {t:"Sorting & disposing of trash", li:["Please sort your trash (PET bottle labels and caps count as burnable trash).","Please use the designated trash bags.","Do not leave trash indoors — take it to the on-site trash area."]},
       {t:"Facilities & equipment", li:["Please treat the facilities and equipment with care. Damage or loss may be charged at cost.","Please turn off the A/C and lights, and close windows and doors when you go out."]},
@@ -420,6 +436,13 @@ en:{
       {t:"Other", li:["Repeated rule violations or damage to the facility may result in a refusal of future stays.","Please follow these rules for a comfortable and safe stay."]},
     ],
   },
+  bbq:{ title:"BBQ Guide", lead:"Guests of Satsukian are welcome to enjoy a BBQ free of charge. Please follow the rules below so everyone can enjoy it safely.",
+    overview:[["Fee","Free"],["Location","(1) BBQ area (next to the gazebo on the property) (2) In front of the Room 201 entrance (Room 201 guests only)"],["Hours","Please finish by 9:00 PM (you may leave the charcoal burning)"],["Advance notice","Required. Please send us your preferred date and time through the messaging service you used to book. Same-day use is possible if available (please contact us by noon). If another booking has already been made, we may ask you to change your date or time."]],
+    lendTitle:"Equipment we provide (free)", lend:"BBQ grill, tables and chairs, lighting, tongs, lighter",
+    bringTitle:"Please bring your own", bring:"Charcoal, food, tableware (plates, chopsticks, cups, etc.)",
+    afterTitle:"After your BBQ", after:["You may leave the charcoal in the grill","Sort your garbage and put it in the designated bags","Return all borrowed equipment to its original place"],
+    noteTitle:"Please note", notes:["Always finish by 9:00 PM","Loud music is prohibited (please be considerate of our neighbors)"],
+    footer:"If you have any questions, please feel free to ask our staff." },
   wifi:{ title:"Wi-Fi", lead:"Select your room to see its Wi-Fi details.", selectPrompt:"Please pick your room from \"Select your room\" above.", extraTitle:"If you can't connect, try this too", show:"Show", hide:"Hide", copy:"Copy", copied:"Copied" },
   faq:{ title:"FAQ", lead:"Search by keyword.", searchPh:"Search (e.g. Wi-Fi, parking, trash)",
     items:[
@@ -429,7 +452,7 @@ en:{
       {q:"Can I smoke indoors?",a:"Sorry, indoor areas are entirely non-smoking."},
       {q:"Can I bring a pet?",a:"Sorry, pets are not allowed."},
       {q:"Is laundry available?",a:"Yes, a coin laundry on site (wash ¥400 / dry ¥100 per 10 min)."},
-      {q:"Can I borrow BBQ equipment?",a:"Yes, for use on the grounds only."},
+      {q:"Can I borrow BBQ equipment?",a:"Yes, BBQ grills and more are lent free of charge (advance notice required). See the \"BBQ\" tab for details."},
       {q:"What should I do with trash?",a:"Sort it, use the designated bags, and take it to the on-site trash area."},
       {q:"How far is the airport?",a:"About 8 minutes by car from Miyako Airport."},
       {q:"How far is the beach?",a:"About 10 minutes by car from Yonaha Maehama Beach."},
@@ -445,7 +468,7 @@ en:{
 },
 zh:{
   eyebrow:"住客專用指南", tagline:"擁有超過3,300平方公尺的廣闊庭院，最多可容納30人入住。",
-  nav:{guide:"導覽",rules:"住宿須知",wifi:"Wi-Fi",faq:"常見問題",contact:"聯絡我們"},
+  nav:{guide:"導覽",rules:"住宿須知",bbq:"烤肉",wifi:"Wi-Fi",faq:"常見問題",contact:"聯絡我們"},
   langName:"繁體中文",
   consent:{title:"入住前確認",lead:"為了讓您舒適又安全地住宿，請確認以下重要事項。",items:["室內全面禁菸。","晚上22時後請保持安靜。","進入室內前，請先在洗腳處沖洗海灘沙子。","請將垃圾分類並拿到指定地點。","遇到緊急狀況時，請先確保安全，再撥打119或110。"],agree:"確認並查看住客指南",required:"請先勾選所有項目"},
   roomSelect:"選擇您的房間", roomNone:"尚未選擇",
@@ -469,7 +492,7 @@ zh:{
     items:[
       {t:"入住與退房", li:["入住時間為15:00以後，退房時間為10:00前。","如需變更時間，請提前與我們聯絡。","逾退房時間，每小時將加收1,000日圓的延長費用。"]},
       {t:"禁菸", li:["室內全面禁菸。"]},
-      {t:"音量與禮儀", li:["晚上22時後請保持安靜。","禁止大音量播放電視、音樂或舉辦派對。","請勿做出影響其他房客及鄰居的行為。"]},
+      {t:"音量與禮儀", li:["晚上22時後請保持安靜。","禁止大音量播放電視、音樂或舉辦派對。","請勿做出影響其他房客及鄰居的行為。","由於建築結構的關係，腳步聲容易傳開，請多加留意。"]},
       {t:"住宿期間", li:["進入室內前，請先在指定洗腳處沖洗沙灘上的沙子。","使用過的餐具與烹飪器具請自行清洗(以免招來螞蟻等蟲類)。","若有移動家具，請於退房時歸回原位。","退房時請勿上鎖，鑰匙請歸還至指定位置。","園內設有投幣式洗衣機可供使用(洗衣400日圓/烘乾100日圓・10分鐘)。","烤肉器材與戶外用品僅限於園區內使用，可供租借。","Wi-Fi連線方式請參閱「Wi-Fi」頁面。"]},
       {t:"垃圾分類與處理", li:["請將垃圾分類(寶特瓶標籤與瓶蓋屬於可燃垃圾)。","請使用指定垃圾袋。","請勿將垃圾放置室內，請拿到園區內的垃圾暫放處。"]},
       {t:"設施與備品使用", li:["請愛惜使用各項設施與備品，若有損壞或遺失，將可能酌收實際費用。","外出時請關閉空調、電燈，並關好門窗。"]},
@@ -479,6 +502,13 @@ zh:{
       {t:"其他", li:["若有違反禮儀或損壞設施之情形，本設施保留拒絕日後入住之權利。","敬請遵守本設施規範，度過舒適又安全的住宿時光。"]},
     ],
   },
+  bbq:{ title:"烤肉指南", lead:"入住「さつきあん」的旅客可以免費享受烤肉(BBQ)。為了讓大家都能安全盡興，請遵守以下規則。",
+    overview:[["費用","免費"],["地點","①烤肉區(園區內涼亭旁) ②201號房門口(僅限201號房住客)"],["使用時間","請於晚上9點(21:00)前結束(木炭不需熄火)"],["事先聯絡","需要。請透過訂房時使用的訊息功能告知使用日期與時間。如有空檔，當天也可使用(當天使用請於中午12點前聯絡)。如已有其他預約，可能會請您更改日期。"]],
+    lendTitle:"免費出借用品", lend:"烤肉爐、桌椅、照明燈、夾子、打火機",
+    bringTitle:"請自行準備", bring:"木炭、食材、餐具(盤子、筷子、杯子等)",
+    afterTitle:"結束後的整理", after:["木炭可直接留在烤肉爐中","請將垃圾分類後放入指定的垃圾袋","請將借用的物品放回原處"],
+    noteTitle:"注意事項", notes:["請務必在晚上9點前結束","禁止大音量播放音樂(請體諒附近鄰居)"],
+    footer:"如有任何疑問，歡迎隨時詢問工作人員。" },
   wifi:{ title:"Wi-Fi 資訊", lead:"選擇房間後即可查看對應的Wi-Fi資訊。", selectPrompt:"請先從上方「選擇您的房間」選取房型。", extraTitle:"若無法連線，請嘗試以下網路", show:"顯示", hide:"隱藏", copy:"複製", copied:"已複製" },
   faq:{ title:"常見問題", lead:"可依關鍵字搜尋。", searchPh:"搜尋(例如:Wi-Fi、停車、垃圾)",
     items:[
@@ -488,7 +518,7 @@ zh:{
       {q:"室內可以吸菸嗎?",a:"很抱歉，室內全面禁菸。"},
       {q:"可以帶寵物嗎?",a:"很抱歉，恕不接受攜帶寵物。"},
       {q:"可以洗衣服嗎?",a:"可以，園內設有投幣式洗衣機(洗衣400日圓/烘乾100日圓・10分鐘)。"},
-      {q:"可以租借烤肉器材嗎?",a:"可以，僅限於園區內使用。"},
+      {q:"可以租借烤肉器材嗎?",a:"可以，烤肉爐等用品免費出借(需事先聯絡)。詳情請參閱「烤肉」頁面。"},
       {q:"垃圾該怎麼處理?",a:"請分類後使用指定垃圾袋，拿到園區內的垃圾暫放處。"},
       {q:"距離機場多遠?",a:"距宮古機場約8分鐘車程。"},
       {q:"距離海灘多遠?",a:"距與那覇前濱海灘約10分鐘車程。"},
@@ -504,7 +534,7 @@ zh:{
 },
 ko:{
   eyebrow:"투숙객 전용 가이드", tagline:"3,300㎡가 넘는 넓은 부지에서 즐기는 최대 30명의 여유로운 시간.",
-  nav:{guide:"안내",rules:"하우스 룰",wifi:"Wi-Fi",faq:"자주 묻는 질문",contact:"문의하기"},
+  nav:{guide:"안내",rules:"하우스 룰",bbq:"바비큐",wifi:"Wi-Fi",faq:"자주 묻는 질문",contact:"문의하기"},
   langName:"한국어",
   consent:{title:"체크인 확인",lead:"쾌적하고 안전한 숙박을 위해 아래 중요 사항을 확인해 주세요.",items:["실내는 전면 금연입니다.","22시 이후에는 조용히 지내주세요.","실내에 들어오기 전에 지정된 장소에서 해변 모래를 씻어 주세요.","쓰레기를 분리하여 지정된 장소에 내놓아 주세요.","긴급 상황에서는 먼저 안전을 확보한 후 119 또는 110에 신고해 주세요."],agree:"확인하고 게스트 가이드 보기",required:"모든 항목에 체크해 주세요"},
   roomSelect:"객실 선택", roomNone:"미선택",
@@ -528,7 +558,7 @@ ko:{
     items:[
       {t:"체크인・체크아웃", li:["체크인은 15:00 이후, 체크아웃은 10:00까지입니다.","시간 변경을 원하시면 사전에 문의해 주세요.","체크아웃 시간을 초과할 경우 1시간당 1,000엔의 연장 요금이 발생합니다."]},
       {t:"금연", li:["실내는 전면 금연입니다."]},
-      {t:"소음・매너", li:["22시 이후에는 조용히 지내주세요.","큰 소리로 TV・음악을 틀거나 파티를 여는 것은 금지입니다.","다른 투숙객 및 인근 주민에게 폐가 되는 행위는 금지입니다."]},
+      {t:"소음・매너", li:["22시 이후에는 조용히 지내주세요.","큰 소리로 TV・음악을 틀거나 파티를 여는 것은 금지입니다.","다른 투숙객 및 인근 주민에게 폐가 되는 행위는 금지입니다.","건물 구조상 발소리가 울리기 쉬우니 주의해 주세요."]},
       {t:"숙박 중", li:["해변 모래는 지정된 발 씻는 곳에서 씻어낸 후 실내로 들어와 주세요.","사용한 조리 기구와 그릇 등은 세척해 주세요(개미 등 벌레가 생길 수 있습니다).","가구 등을 옮기신 경우 체크아웃 시 원래 위치로 되돌려 주세요.","체크아웃 시 문을 잠그지 말고, 열쇠는 지정된 위치에 놓아주세요.","부지 내 코인 세탁기도 이용하실 수 있습니다. 세탁 400엔/건조 100엔(10분).","바비큐 기구 및 아웃도어 용품은 부지 내에 한해 대여 가능합니다.","Wi-Fi 연결 방법은 Wi-Fi 페이지를 참고해 주세요."]},
       {t:"쓰레기 분리・처리", li:["쓰레기는 분리해 주세요(페트병 라벨과 뚜껑은 가연 쓰레기입니다).","지정된 쓰레기봉투를 사용해 주세요.","쓰레기는 실내에 두지 말고 부지 내 쓰레기 임시 보관소에 내놓아 주세요."]},
       {t:"시설・비품 이용", li:["시설과 비품은 소중히 사용해 주세요. 파손이나 분실 시 실비를 청구할 수 있습니다.","외출 시에는 에어컨과 조명을 끄고 창문과 문을 닫아 주세요."]},
@@ -538,6 +568,13 @@ ko:{
       {t:"기타", li:["매너 위반이나 시설 파손이 있는 경우 향후 이용을 거절할 수 있습니다.","시설 규칙을 지켜 쾌적하고 안전한 숙박을 즐겨 주세요."]},
     ],
   },
+  bbq:{ title:"바비큐 안내", lead:"사츠키안(さつきあん)에 숙박하시는 고객님은 바비큐(BBQ)를 무료로 즐기실 수 있습니다. 안전하게 즐기실 수 있도록 아래 규칙을 지켜 주세요.",
+    overview:[["요금","무료"],["장소","① 바비큐 구역(부지 내 정자 옆) ② 201호실 현관 앞(201호실 숙박 고객님만)"],["이용 시간","밤 9시(21:00)까지 종료해 주세요(숯불은 끄지 않으셔도 됩니다)"],["사전 연락","필요합니다. 예약 시 사용하신 메시지로 이용 날짜와 시간을 알려 주세요. 빈자리가 있으면 당일 이용도 가능합니다(당일은 오전 중에 연락해 주세요). 이미 다른 예약이 있는 경우 일정 변경을 부탁드릴 수 있습니다."]],
+    lendTitle:"무료 대여 물품", lend:"바비큐 그릴, 테이블·의자, 조명, 집게, 라이터",
+    bringTitle:"고객님께서 준비해 주실 것", bring:"숯, 식재료, 식기류(접시·젓가락·컵 등)",
+    afterTitle:"종료 후 정리", after:["숯은 그릴에 그대로 두셔도 됩니다","쓰레기는 분리하여 지정된 봉투에 넣어 주세요","빌리신 물품은 원래 자리에 돌려놓아 주세요"],
+    noteTitle:"부탁 말씀", notes:["반드시 밤 9시까지 종료해 주세요","큰 음량으로 음악을 트는 것은 금지입니다(이웃을 배려해 주세요)"],
+    footer:"궁금하신 점은 언제든지 스태프에게 문의해 주세요." },
   wifi:{ title:"Wi-Fi 안내", lead:"객실을 선택하면 해당 Wi-Fi 정보가 표시됩니다.", selectPrompt:"위의 \"객실 선택\"에서 객실을 먼저 선택해 주세요.", extraTitle:"연결이 안 될 경우 이것도 시도해 보세요", show:"보기", hide:"숨기기", copy:"복사", copied:"복사됨" },
   faq:{ title:"자주 묻는 질문", lead:"키워드로 검색할 수 있습니다.", searchPh:"검색(예: Wi-Fi, 주차, 쓰레기)",
     items:[
@@ -547,7 +584,7 @@ ko:{
       {q:"실내에서 흡연할 수 있나요?",a:"죄송하지만 실내는 전면 금연입니다."},
       {q:"반려동물을 데려갈 수 있나요?",a:"죄송하지만 반려동물 동반은 어렵습니다."},
       {q:"세탁이 가능한가요?",a:"네, 부지 내 코인 세탁기를 이용하실 수 있습니다(세탁 400엔/건조 100엔・10분)."},
-      {q:"바비큐 기구를 빌릴 수 있나요?",a:"네, 부지 내에 한해 대여 가능합니다."},
+      {q:"바비큐 기구를 빌릴 수 있나요?",a:"네, 바비큐 그릴 등을 무료로 대여해 드립니다(사전 연락 필요). 자세한 내용은 \"바비큐\" 탭을 참고해 주세요."},
       {q:"쓰레기는 어떻게 처리하나요?",a:"분리 후 지정 봉투에 담아 부지 내 쓰레기 임시 보관소에 내놓아 주세요."},
       {q:"공항에서 얼마나 걸리나요?",a:"미야코 공항에서 차로 약 8분입니다."},
       {q:"해변까지 얼마나 걸리나요?",a:"요나하 마에하마 비치까지 차로 약 10분입니다."},
@@ -573,7 +610,7 @@ try{
   if(savedLang && T[savedLang]) state.lang = savedLang;
   if(savedLanguageSelected === '1') state.languageSelected = true;
   if(savedRoom && WIFI[savedRoom]) state.room = savedRoom;
-  if(savedTab && ['guide','rules','wifi','faq','contact'].includes(savedTab)) state.tab = savedTab;
+  if(savedTab && ['guide','rules','bbq','wifi','faq','contact'].includes(savedTab)) state.tab = savedTab;
   if(savedConsent === '1') state.consentAccepted = true;
 }catch(e){}
 state.languageSelected = Boolean(state.languageSelected);
@@ -666,9 +703,16 @@ function renderLangbar(){
     '<button class="langbtn" data-action="setLang" data-lang="'+l+'" aria-pressed="'+(l===state.lang)+'">'+T[l].langName+'</button>'
   ).join('');
 }
+function renderRoombar(){
+  const bar = document.getElementById('roombar');
+  bar.hidden = !state.languageSelected || !state.consentAccepted;
+  bar.innerHTML = '<span class="rlabel">'+t().roomSelect+'</span>' + ['102','201','202'].map(id =>
+    '<button class="roombtn" data-action="setRoom" data-room="'+id+'" aria-pressed="'+(state.room===id)+'">'+t().rooms[id].name+'</button>'
+  ).join('');
+}
 function renderTabbar(){
   const bar = document.getElementById('tabbar');
-  const tabs = [['guide','home'],['rules','clipboard'],['wifi','wifi'],['faq','faq'],['contact','mail']];
+  const tabs = [['guide','home'],['rules','clipboard'],['bbq','grill'],['wifi','wifi'],['faq','faq'],['contact','mail']];
   bar.innerHTML = tabs.map(([key,icon]) =>
     '<button class="tabbtn" data-action="setTab" data-tab="'+key+'" aria-selected="'+(key===state.tab)+'">'+ICON[icon]+'<span>'+t().nav[key]+'</span></button>'
   ).join('');
@@ -707,9 +751,6 @@ function panelGuide(){
   return '<section class="panel"><div class="card">'
     + '<h2>'+ICON.home+g_nav('guide')+'</h2>'
     + '<p class="lead">'+g.intro+'</p>'
-    + '<h3 style="font-size:15px;margin:18px 0 10px;">'+g.roomsTitle+'</h3>'
-    + '<div class="roomgrid">'+['102','201','202'].map(roomCardHtml).join('')+'</div>'
-    + (state.room ? '<div class="selectedroom-note">'+ICON.check+g.selectedNote+' '+t().rooms[state.room].name+'</div>' : '')
     + '<ul class="featlist">'+g.features.map(f=>'<li>'+ICON.spark+'<span>'+f+'</span></li>').join('')+'</ul>'
     + '<div class="factgrid">'
       + fact('pin', g.addressLabel, ADDRESS_RAW, '<a class="maplink" href="'+MAP_URL+'" target="_blank" rel="noopener">'+g.maplink+' →</a>')
@@ -730,6 +771,20 @@ function panelRules(){
     + '<h2>'+ICON.clipboard+r.title+'</h2>'
     + '<p class="lead">'+r.lead+'</p>'
     + r.items.map((it,i)=>'<div class="ruleitem'+(it.emergency?' emergency':'')+'"><h3><span class="rnum">'+(i+1)+'</span>'+it.t+'</h3><ul>'+it.li.map(l=>'<li>'+l+'</li>').join('')+'</ul></div>').join('')
+    + '</div></section>';
+}
+
+function panelBbq(){
+  const b = t().bbq;
+  return '<section class="panel"><div class="card">'
+    + '<h2>'+ICON.grill+b.title+'</h2>'
+    + '<p class="lead">'+b.lead+'</p>'
+    + '<div class="factgrid" style="margin-top:0;">'+b.overview.map(o=>'<div class="fact">'+ICON.check+'<div><div class="flabel">'+o[0]+'</div><div class="fval">'+o[1]+'</div></div></div>').join('')+'</div>'
+    + '<div class="ruleitem"><h3>'+b.lendTitle+'</h3><p style="margin:0;font-size:14.5px;">'+b.lend+'</p></div>'
+    + '<div class="ruleitem"><h3>'+b.bringTitle+'</h3><p style="margin:0;font-size:14.5px;">'+b.bring+'</p></div>'
+    + '<div class="ruleitem"><h3>'+b.afterTitle+'</h3><ol style="margin:0;padding-left:20px;display:grid;gap:6px;">'+b.after.map(a=>'<li style="font-size:14.5px;">'+a+'</li>').join('')+'</ol></div>'
+    + '<div class="ruleitem emergency"><h3>'+b.noteTitle+'</h3><ul>'+b.notes.map(n=>'<li>'+n+'</li>').join('')+'</ul></div>'
+    + '<p style="margin:16px 0 0;color:var(--ink-soft);font-size:14px;">'+b.footer+'</p>'
     + '</div></section>';
 }
 
@@ -799,7 +854,7 @@ function renderContent(){
     document.getElementById('content').innerHTML = panelConsent();
     return;
   }
-  const map = { guide: panelGuide, rules: panelRules, wifi: panelWifi, faq: panelFaq, contact: panelContact };
+  const map = { guide: panelGuide, rules: panelRules, bbq: panelBbq, wifi: panelWifi, faq: panelFaq, contact: panelContact };
   document.getElementById('content').innerHTML = map[state.tab]();
 }
 
@@ -810,6 +865,7 @@ function render(){
   document.getElementById('eyebrow').textContent = state.languageSelected ? t().eyebrow : 'Language / 言語 / 語言 / 언어';
   document.getElementById('tagline').textContent = state.languageSelected ? t().tagline : '';
   renderLangbar();
+  renderRoombar();
   renderTabbar();
   renderContent();
 }
