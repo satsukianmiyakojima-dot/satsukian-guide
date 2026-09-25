@@ -1,1 +1,31 @@
-Get-Content -Raw -Encoding UTF8 "C:\Users\mealt\OneDrive\デスクトップ\satsukian-guide\README.md" | Set-Clipboard
+# さつきあん ゲストガイド
+
+沖縄・宮古島の民宿「さつきあん宮古島」にご宿泊のお客様向けの、スマートフォン用デジタルガイドです。日本語・English・繁體中文・한국어に対応しています。
+
+**公開ページ**: https://satsukianmiyakojima-dot.github.io/satsukian-guide/
+
+## ガイドの流れ
+
+1. 言語を選ぶ
+2. チェックイン時の確認(禁煙・静かな時間・ゴミなど5項目)にチェックする
+3. ガイドが開く(ご案内 / ハウスルール / BBQ / Wi-Fi / よくある質問 / お問い合わせ)
+
+お部屋(102・201・202号室)を選ぶと、お部屋に合ったWi-Fi情報が表示されます。
+
+## ファイルの構成
+
+| ファイル | 内容 |
+|---|---|
+| `index.html` | ガイド本体。HTML・CSS・JavaScriptがこの1ファイルに入っています(ビルド不要) |
+| `content/satsukian_guide_content.xlsx` | ガイドの文言のもとになるデータ(4言語) |
+| `print/guest-guide-qr.html` | チェックイン時に渡すA4のQRコードシート(ブラウザで開いて印刷) |
+
+## 見る・編集する
+
+`index.html` をブラウザで開くと、そのまま動きます。VS Codeの拡張機能「Live Server」を使うと、編集した内容をすぐ確認できます。
+
+文言を変えるときは、`index.html` の中の `const T = {...}` を編集します。4言語分が入っています。
+
+## 公開のしくみ
+
+GitHub Pagesが、このリポジトリの `main` ブランチの `index.html` をそのまま公開しています。`main` の `index.html` を入れ替えると、数分で公開ページに反映されます。
