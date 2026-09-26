@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>さつきあん ゲストガイド</title>
+<meta name="theme-color" content="#0E7C86">
+<meta name="apple-mobile-web-app-title" content="さつきあん">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="apple-touch-icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
   :root{
@@ -313,6 +317,18 @@
   .lockbox .lockperiod{ font-weight:700; color:var(--teal-ink); }
   .lockbox p{ margin:0; font-size:14.5px; }
   .lockbox svg{ width:17px; height:17px; vertical-align:-3px; }
+  .a2hs{ border:1.5px solid var(--teal); border-radius:14px; background:color-mix(in srgb, var(--teal) 6%, var(--surface)); margin:0 0 18px; }
+  .a2hs summary{ list-style:none; cursor:pointer; display:flex; align-items:center; gap:10px; padding:13px 14px; font-weight:700; color:var(--teal-ink); font-size:14.5px; }
+  .a2hs summary::-webkit-details-marker{ display:none; }
+  .a2hs summary svg{ width:20px; height:20px; flex:none; color:var(--teal); }
+  .a2hs summary .chev{ width:16px; height:16px; margin-left:auto; color:var(--ink-soft); transition:transform .15s ease; }
+  .a2hs[open] summary .chev{ transform:rotate(180deg); }
+  .a2hs-body{ padding:0 14px 14px; display:grid; gap:12px; }
+  .a2hs-body p{ margin:0; font-size:14px; }
+  .a2hs-cols{ display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  .a2hs-cols h4{ margin:0 0 6px; font-size:14px; }
+  .a2hs-cols ol{ margin:0; padding-left:20px; display:grid; gap:5px; font-size:13.5px; }
+  .a2hs-body p.a2hs-note{ color:var(--ink-soft); font-size:12.5px; }
 </style>
 </head>
 <body>
@@ -342,6 +358,7 @@
 
 <script>
 const ICON = {
+  mobile:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg>',
   lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>',
   tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.2V4.5a1 1 0 0 1 1-1h7.7l8.3 8.3a1.5 1.5 0 0 1 0 2.1l-6.6 6.6a1.5 1.5 0 0 1-2.1 0Z"/><circle cx="8" cy="8" r="1.3"/></svg>',
   grill:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16a8 8 0 0 1-16 0Z"/><path d="M8 17.5 6.5 21M16 17.5l1.5 3.5M12 18v3"/><path d="M9 3.5c-.8 1 .8 2-0 3M12 3c-.8 1 .8 2 0 3M15 3.5c-.8 1 .8 2 0 3"/></svg>',
@@ -425,6 +442,7 @@ ja:{
   nav:{guide:"ご案内",rules:"ハウスルール",bbq:"BBQ",wifi:"Wi-Fi",shops:"おすすめ",faq:"よくある質問",contact:"お問い合わせ"},
   shops:{title:"おすすめのお店",lead:"さつきあんにご宿泊のお客様だけの、割引や限定プランです。お店の人にこの画面を見せてください。",pass:"さつきあん宿泊者",today:"本日",all:"すべて",cats:{food:"飲食",car:"レンタカー・送迎",activity:"体験・ツアー"},only:"宿泊者限定",show:"この画面をお店の人に見せる",call:"電話する",phone:"電話",line:"LINEで予約",web:"予約・詳細",hours:"営業時間",closed:"定休日",distance:"さつきあんから",map:"地図で見る",close:"閉じる",showHint:"お店の人に、この画面を見せてください。日付と時刻が動いていることを確認してもらいます。",foot:"割引・プランの内容は変更になる場合があります。ご利用の前に、お店にご確認ください。"},
   stay:{title:"ご宿泊期間の入力",lead:"入力した期間のあいだだけ、Wi-Fiと「おすすめ」のクーポンをご覧いただけます。",checkin:"チェックイン日",checkout:"チェックアウト日",go:"この期間で進む",save:"この期間に変更する",cancel:"もどる",note:"宿泊中は、チェックアウト日を修正できます。宿泊が終わると、期間は変更できなくなります。",errRequired:"チェックイン日とチェックアウト日を入力してください。",errOrder:"チェックアウト日は、チェックイン日より後の日にしてください。",errLength:"ご宿泊は最大14泊までです。",errCheckin:"チェックイン日が正しくありません。13日前から明日までの日付を入力してください。",errPast:"この期間は、すでに終わっています。",errCooldown:"前回のご宿泊が終わってから30日間は、新しい期間を入力できません。スタッフにお声がけください。",label:"ご宿泊期間",change:"期間を変更する",newStay:"新しくご宿泊される方はこちら",lockedLead:"この内容は、ご宿泊期間のあいだだけご覧いただけます。",notyet:"ご宿泊日(チェックイン日)になったら、ご覧いただけます。",expired:"ご宿泊期間は終了しました。ご利用ありがとうございました。またのお越しをお待ちしています。",ask:"お困りのときは、スタッフにお声がけください。",official:"公式サイトを見る"},
+  a2hs:{title:"ホーム画面に追加すると、次からすぐ開けます",lead:"アイコンをタップするだけで、このガイドを開けます。",ios:"iPhone(Safari)",iosSteps:["Safariでこのページを開きます(QRコードをカメラで読み取ると、Safariで開きます)。","画面の下にある「共有」ボタン(四角から上向きの矢印)をタップします。","メニューを少し上にスクロールして、「ホーム画面に追加」をタップします。","右上の「追加」をタップします。"],android:"Android(Chrome)",androidSteps:["Chromeでこのページを開きます。","右上の「︙」(メニュー)をタップします。","「ホーム画面に追加」(または「アプリをインストール」)をタップします。","「追加」をタップします。"],note:"ホーム画面のアイコンから開いたときに、言語や宿泊期間の入力をもう一度お願いする場合があります。"},
   langName:"日本語",
   consent:{title:"チェックイン時の確認",lead:"快適で安全なご滞在のため、以下の重要事項をご確認ください。",items:["室内は全面禁煙です。","22時以降は静かにお過ごしください。","ビーチの砂は足洗い場で落としてから入室してください。","ゴミは分別し、指定の場所へ出してください。","緊急時は安全を確保したうえで、119または110へ通報してください。"],agree:"確認してゲストガイドを見る",required:"すべての項目にチェックしてください"},
   roomSelect:"お部屋を選択", roomNone:"未選択",
@@ -493,6 +511,7 @@ en:{
   nav:{guide:"Guide",rules:"House Rules",bbq:"BBQ",wifi:"Wi-Fi",shops:"Shops",faq:"FAQ",contact:"Contact"},
   shops:{title:"Recommended Shops",lead:"Discounts and special plans just for guests staying at Satsukian. Please show this screen to the staff.",pass:"Satsukian Guest",today:"Today",all:"All",cats:{food:"Food & drink",car:"Car rental & transfers",activity:"Activities & tours"},only:"Guests only",show:"Show this screen to the staff",call:"Call",phone:"Phone",line:"Book on LINE",web:"Book / Details",hours:"Hours",closed:"Closed",distance:"From Satsukian",map:"Open map",close:"Close",showHint:"Please show this screen to the staff. They will check that the date and time are updating.",foot:"Offers may change. Please check with the shop before you go."},
   stay:{title:"Enter your stay dates",lead:"Wi-Fi and the “Shops” coupons are available only during the dates you enter.",checkin:"Check-in date",checkout:"Check-out date",go:"Continue with these dates",save:"Save these dates",cancel:"Back",note:"While you are staying, you can correct the check-out date. Once your stay has ended, the dates can no longer be changed.",errRequired:"Please enter both the check-in and check-out dates.",errOrder:"The check-out date must be after the check-in date.",errLength:"The maximum stay is 14 nights.",errCheckin:"The check-in date is not valid. Please enter a date from 13 days ago up to tomorrow.",errPast:"These dates have already passed.",errCooldown:"You cannot enter new dates for 30 days after your last stay ended. Please ask our staff.",label:"Stay dates",change:"Change dates",newStay:"Starting a new stay? Tap here",lockedLead:"This content is available only during your stay.",notyet:"You can view this from your check-in date.",expired:"Your stay has ended. Thank you for staying with us, and we look forward to welcoming you again.",ask:"If you need help, please ask our staff.",official:"Visit our website"},
+  a2hs:{title:"Add this guide to your home screen to open it quickly",lead:"Then you can open the guide with one tap on the icon.",ios:"iPhone (Safari)",iosSteps:["Open this page in Safari (if you scanned the QR code with the camera, it opens in Safari).","Tap the Share button at the bottom of the screen (a square with an arrow pointing up).","Scroll the menu up a little and tap “Add to Home Screen”.","Tap “Add” at the top right."],android:"Android (Chrome)",androidSteps:["Open this page in Chrome.","Tap the ⋮ menu at the top right.","Tap “Add to Home screen” (or “Install app”).","Tap “Add”."],note:"When you open the guide from the home screen icon, you may be asked to choose your language and enter your stay dates again."},
   langName:"English",
   consent:{title:"Check-in confirmation",lead:"Please review these important points for a comfortable and safe stay.",items:["Smoking is not permitted indoors.","Please keep quiet after 10:00 PM.","Please rinse beach sand off at the foot-washing area before entering.","Please sort your trash and take it to the designated area.","In an emergency, secure your safety first, then call 119 or 110."],agree:"I understand and open the guest guide",required:"Please check every item first"},
   roomSelect:"Select your room", roomNone:"Not selected",
@@ -561,6 +580,7 @@ zh:{
   nav:{guide:"導覽",rules:"住宿須知",bbq:"烤肉",wifi:"Wi-Fi",shops:"推薦",faq:"常見問題",contact:"聯絡我們"},
   shops:{title:"推薦店家",lead:"專為入住「さつきあん」的旅客準備的優惠與限定方案。請向店員出示此畫面。",pass:"さつきあん住客",today:"今日",all:"全部",cats:{food:"餐飲",car:"租車・接送",activity:"體驗・行程"},only:"住客限定",show:"向店員出示此畫面",call:"撥打電話",phone:"電話",line:"用 LINE 預約",web:"預約・詳情",hours:"營業時間",closed:"公休日",distance:"距離さつきあん",map:"查看地圖",close:"關閉",showHint:"請向店員出示此畫面，讓店員確認日期與時間正在跳動。",foot:"優惠與方案內容可能變更，使用前請向店家確認。"},
   stay:{title:"請輸入住宿期間",lead:"僅在您輸入的期間內，可查看 Wi-Fi 與「推薦」優惠券。",checkin:"入住日",checkout:"退房日",go:"以此期間繼續",save:"儲存此期間",cancel:"返回",note:"住宿期間內可修改退房日。住宿結束後，將無法再變更期間。",errRequired:"請輸入入住日與退房日。",errOrder:"退房日必須晚於入住日。",errLength:"住宿最長為14晚。",errCheckin:"入住日不正確。請輸入13天前至明天之間的日期。",errPast:"此期間已經結束。",errCooldown:"上次住宿結束後的30天內，無法輸入新的期間。請洽詢工作人員。",label:"住宿期間",change:"變更期間",newStay:"新的住宿請按此",lockedLead:"此內容僅在住宿期間內可查看。",notyet:"到了入住日即可查看。",expired:"住宿期間已結束。感謝您的蒞臨，期待再次為您服務。",ask:"如有需要，請洽詢工作人員。",official:"前往官方網站"},
+  a2hs:{title:"加到主畫面，下次一點就能開啟",lead:"只要點一下圖示，就能開啟本指南。",ios:"iPhone(Safari)",iosSteps:["用 Safari 開啟此頁面(用相機掃描 QR Code 時，會以 Safari 開啟)。","點選畫面下方的「分享」按鈕(方形加向上箭頭)。","將選單稍微往上捲動，點選「加入主畫面」。","點選右上角的「新增」。"],android:"Android(Chrome)",androidSteps:["用 Chrome 開啟此頁面。","點選右上角的「⋮」選單。","點選「新增至主畫面」(或「安裝應用程式」)。","點選「新增」。"],note:"從主畫面圖示開啟時，可能需要再次選擇語言並輸入住宿期間。"},
   langName:"繁體中文",
   consent:{title:"入住前確認",lead:"為了讓您舒適又安全地住宿，請確認以下重要事項。",items:["室內全面禁菸。","晚上22時後請保持安靜。","進入室內前，請先在洗腳處沖洗海灘沙子。","請將垃圾分類並拿到指定地點。","遇到緊急狀況時，請先確保安全，再撥打119或110。"],agree:"確認並查看住客指南",required:"請先勾選所有項目"},
   roomSelect:"選擇您的房間", roomNone:"尚未選擇",
@@ -629,6 +649,7 @@ ko:{
   nav:{guide:"안내",rules:"하우스 룰",bbq:"바비큐",wifi:"Wi-Fi",shops:"추천",faq:"자주 묻는 질문",contact:"문의하기"},
   shops:{title:"추천 가게",lead:"사츠키안(さつきあん) 투숙객 전용 할인과 한정 플랜입니다. 가게 직원에게 이 화면을 보여 주세요.",pass:"사츠키안 투숙객",today:"오늘",all:"전체",cats:{food:"식당·카페",car:"렌터카·송영",activity:"체험·투어"},only:"투숙객 한정",show:"가게 직원에게 이 화면 보여주기",call:"전화하기",phone:"전화",line:"LINE으로 예약",web:"예약·자세히",hours:"영업시간",closed:"정기 휴무",distance:"사츠키안에서",map:"지도 보기",close:"닫기",showHint:"가게 직원에게 이 화면을 보여 주세요. 날짜와 시간이 움직이는지 확인합니다.",foot:"할인과 플랜 내용은 변경될 수 있습니다. 이용 전에 가게에 확인해 주세요."},
   stay:{title:"숙박 기간 입력",lead:"입력하신 기간 동안에만 Wi-Fi와 「추천」 쿠폰을 보실 수 있습니다.",checkin:"체크인 날짜",checkout:"체크아웃 날짜",go:"이 기간으로 진행",save:"이 기간으로 저장",cancel:"돌아가기",note:"숙박 중에는 체크아웃 날짜를 수정할 수 있습니다. 숙박이 끝나면 기간을 변경할 수 없습니다.",errRequired:"체크인 날짜와 체크아웃 날짜를 입력해 주세요.",errOrder:"체크아웃 날짜는 체크인 날짜보다 뒤여야 합니다.",errLength:"숙박은 최대 14박까지입니다.",errCheckin:"체크인 날짜가 올바르지 않습니다. 13일 전부터 내일까지의 날짜를 입력해 주세요.",errPast:"이 기간은 이미 끝났습니다.",errCooldown:"지난 숙박이 끝난 후 30일 동안은 새 기간을 입력할 수 없습니다. 직원에게 문의해 주세요.",label:"숙박 기간",change:"기간 변경",newStay:"새로 숙박하시는 분은 여기",lockedLead:"이 내용은 숙박 기간 동안에만 볼 수 있습니다.",notyet:"체크인 날짜가 되면 볼 수 있습니다.",expired:"숙박 기간이 끝났습니다. 이용해 주셔서 감사합니다. 또 방문해 주세요.",ask:"도움이 필요하시면 직원에게 문의해 주세요.",official:"공식 사이트 보기"},
+  a2hs:{title:"홈 화면에 추가하면 다음부터 바로 열 수 있습니다",lead:"아이콘을 누르기만 하면 이 가이드를 열 수 있습니다.",ios:"iPhone(Safari)",iosSteps:["Safari에서 이 페이지를 엽니다(카메라로 QR코드를 스캔하면 Safari로 열립니다).","화면 아래의 「공유」 버튼(네모에 위쪽 화살표)을 누릅니다.","메뉴를 조금 위로 스크롤하여 「홈 화면에 추가」를 누릅니다.","오른쪽 위의 「추가」를 누릅니다."],android:"Android(Chrome)",androidSteps:["Chrome에서 이 페이지를 엽니다.","오른쪽 위의 「⋮」 메뉴를 누릅니다.","「홈 화면에 추가」(또는 「앱 설치」)를 누릅니다.","「추가」를 누릅니다."],note:"홈 화면 아이콘으로 열 때 언어 선택과 숙박 기간 입력을 다시 요청할 수 있습니다."},
   langName:"한국어",
   consent:{title:"체크인 확인",lead:"쾌적하고 안전한 숙박을 위해 아래 중요 사항을 확인해 주세요.",items:["실내는 전면 금연입니다.","22시 이후에는 조용히 지내주세요.","실내에 들어오기 전에 지정된 장소에서 해변 모래를 씻어 주세요.","쓰레기를 분리하여 지정된 장소에 내놓아 주세요.","긴급 상황에서는 먼저 안전을 확보한 후 119 또는 110에 신고해 주세요."],agree:"확인하고 게스트 가이드 보기",required:"모든 항목에 체크해 주세요"},
   roomSelect:"객실 선택", roomNone:"미선택",
@@ -951,11 +972,21 @@ function panelConsent(){
     + '</div></section>';
 }
 
+function a2hsHtml(){
+  const a = t().a2hs;
+  const steps = arr => '<ol>'+arr.map(s=>'<li>'+s+'</li>').join('')+'</ol>';
+  return '<details class="a2hs"><summary>'+ICON.mobile+'<span>'+a.title+'</span>'+ICON.chev+'</summary>'
+    + '<div class="a2hs-body"><p>'+a.lead+'</p>'
+    + '<div class="a2hs-cols"><div><h4>'+a.ios+'</h4>'+steps(a.iosSteps)+'</div><div><h4>'+a.android+'</h4>'+steps(a.androidSteps)+'</div></div>'
+    + '<p class="a2hs-note">'+a.note+'</p></div></details>';
+}
+
 function panelGuide(){
   const g = t().guide;
   return '<section class="panel"><div class="card">'
     + '<h2>'+ICON.home+g_nav('guide')+'</h2>'
     + '<p class="lead">'+g.intro+'</p>'
+    + a2hsHtml()
     + '<ul class="featlist">'+g.features.map(f=>'<li>'+ICON.spark+'<span>'+f+'</span></li>').join('')+'</ul>'
     + '<div class="factgrid">'
       + fact('pin', g.addressLabel, ADDRESS_RAW, '<a class="maplink" href="'+MAP_URL+'" target="_blank" rel="noopener">'+g.maplink+' →</a>')

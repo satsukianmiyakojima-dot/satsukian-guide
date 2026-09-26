@@ -20,6 +20,7 @@
 | ファイル | 内容 |
 |---|---|
 | `index.html` | ガイド本体。HTML・CSS・JavaScriptがこの1ファイルに入っています(ビルド不要) |
+| `apple-touch-icon.png` | ホーム画面に追加したときのアイコン(180×180) |
 | `print/guest-guide-qr.html` | チェックイン時に渡すA4のQRコードシート(ブラウザで開いて印刷) |
 
 ## 見る・編集する

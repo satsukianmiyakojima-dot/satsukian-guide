@@ -5,6 +5,7 @@
 ## 構成
 
 - `index.html` — アプリ本体(HTML/CSS/JSすべて1ファイルに内包)
+- `apple-touch-icon.png` — ホーム画面用アイコン(180×180、青緑地に白文字「さつきあん」+ミンサー柄の帯)。`index.html` の `<link rel="apple-touch-icon">` と `<meta name="apple-mobile-web-app-title">` が参照。ご案内タブの先頭に「ホーム画面に追加する方法」(iPhone/Android、4言語、`a2hsHtml()`)がある。
 - `content/satsukian_guide_content.xlsx` — 表示内容(4言語)のマスターデータ。内容を変更する際はこのExcelを直接編集してから `index.html` に反映する運用
 
 ## 内容の言語
