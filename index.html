@@ -308,6 +308,9 @@
   .stayfield{ display:grid; gap:6px; }
   .stayfield label{ font-size:13px; font-weight:700; color:var(--ink-soft); }
   .stayfield input[type="date"]{ width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); font:inherit; font-size:16px; }
+  /* iPhoneのSafariで日付欄の幅・高さが崩れないように */
+  .stayfield input[type="date"]{ display:block; min-height:50px; -webkit-appearance:none; appearance:none; text-align:left; }
+  .stayfield input[type="date"]::-webkit-date-and-time-value{ text-align:left; }
   .stayfield input:disabled{ opacity:.6; }
   .stayerror{ margin:0; padding:10px 12px; border-radius:10px; background:var(--gold-bg); color:var(--coral-ink); font-size:14px; font-weight:600; }
   .staynote{ margin:0; color:var(--ink-soft); font-size:12.5px; }
@@ -724,7 +727,7 @@ function addDays(iso, n){ return new Date(isoToUtc(iso) + n*86400000).toISOStrin
 function diffDays(a, b){ return Math.round((isoToUtc(b) - isoToUtc(a)) / 86400000); }
 function validIso(s){ return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(isoToUtc(s)); }
 
-let state = { lang: 'ja', languageSelected: false, room: null, tab: 'guide', faqQuery: '', consentAccepted: false, shopFilter: 'all', coupon: null, stay: null, editingStay: false };
+let state = { lang: 'ja', languageSelected: false, room: null, tab: 'guide', faqQuery: '', consentAccepted: false, shopFilter: 'all', coupon: null, stay: null, editingStay: false, stayDraft: null };
 try{
   const savedLang = localStorage.getItem('sk_lang');
   const savedLanguageSelected = localStorage.getItem('sk_lang_confirmed');
@@ -806,6 +809,12 @@ function stayStatus(){
 }
 function canStartNew(){ return !state.stay || todayJst() >= addDays(state.stay.out, STAY_COOLDOWN_DAYS); }
 function fmtMD(iso){ return new Date(isoToUtc(iso)).toLocaleDateString(LOCALES[state.lang], {timeZone:'UTC', month:'numeric', day:'numeric'}); }
+// チェックアウト日の選べる範囲(チェックインの翌日以降・今日以降、最大14泊まで)
+function stayOutRange(inD){
+  const today = todayJst();
+  const next = addDays(inD, 1);
+  return { min: next > today ? next : today, max: addDays(inD, STAY_MAX_NIGHTS) };
+}
 function stayRangeText(){ return state.stay ? fmtMD(state.stay.in) + '〜' + fmtMD(state.stay.out) : ''; }
 function validateStay(inD, outD){
   if(!inD || !outD) return 'errRequired';
@@ -833,6 +842,7 @@ window.skSubmitStay = function(){
   if(prev && st === 'expired'){ state.consentAccepted = false; state.room = null; }
   state.stay = {in:inD, out:outD};
   state.editingStay = false;
+  state.stayDraft = null;
   save();
   render();
   window.scrollTo({top:0, behavior:'instant'});
@@ -858,8 +868,8 @@ document.addEventListener('click', function(e){
   else if(action === 'filterShops'){ state.shopFilter = el.dataset.cat; renderContent(); }
   else if(action === 'openCoupon'){ if(stayStatus() === 'active'){ state.coupon = el.dataset.shop; renderCoupon(); } }
   else if(action === 'submitStay') skSubmitStay();
-  else if(action === 'editStay' || action === 'newStay'){ state.editingStay = true; render(); }
-  else if(action === 'cancelStay'){ state.editingStay = false; render(); }
+  else if(action === 'editStay' || action === 'newStay'){ state.editingStay = true; state.stayDraft = null; render(); }
+  else if(action === 'cancelStay'){ state.editingStay = false; state.stayDraft = null; render(); }
   else if(action === 'closeCoupon'){ state.coupon = null; renderCoupon(); }
 });
 document.addEventListener('keydown', function(e){
@@ -868,7 +878,27 @@ document.addEventListener('keydown', function(e){
 document.addEventListener('change', function(e){
   if(e.target && e.target.matches('[data-action="consentCheck"]')) updateConsentButton();
 });
+// 入力途中の宿泊期間を覚えておく(言語の切り替えやアプリの切り替えで消えないように)。
+// チェックイン日を変えたら、チェックアウト日の選べる範囲も合わせる。
+function onStayInput(e){
+  const inEl = document.getElementById('stayIn');
+  const outEl = document.getElementById('stayOut');
+  if(!inEl || !outEl) return;
+  if(e.target === inEl && validIso(inEl.value)){
+    const r = stayOutRange(inEl.value);
+    outEl.min = r.min; outEl.max = r.max;
+    if(!validIso(outEl.value) || outEl.value < r.min) outEl.value = addDays(inEl.value, 1);
+    else if(outEl.value > r.max) outEl.value = r.max;
+  }
+  state.stayDraft = {in:inEl.value, out:outEl.value};
+  const box = document.getElementById('stayError');
+  if(box) box.hidden = true;
+}
+document.addEventListener('change', function(e){
+  if(e.target && (e.target.id === 'stayIn' || e.target.id === 'stayOut')) onStayInput(e);
+});
 document.addEventListener('input', function(e){
+  if(e.target && (e.target.id === 'stayIn' || e.target.id === 'stayOut')){ onStayInput(e); return; }
   if(e.target && e.target.id === 'faqSearchInput'){
     const pos = e.target.selectionStart;
     skSetQuery(e.target.value);
@@ -922,15 +952,23 @@ function panelStay(){
   const st = stayStatus();
   const fresh = !prev || st === 'expired';
   const today = todayJst();
-  const defIn = fresh ? today : prev.in;
-  const defOut = fresh ? addDays(today, 1) : prev.out;
   const lockIn = prev && st === 'active';
+  const draft = state.stayDraft;
+  let defIn = fresh ? today : prev.in;
+  let defOut = fresh ? addDays(today, 1) : prev.out;
+  if(draft){
+    if(!lockIn && draft.in) defIn = draft.in;
+    if(draft.out) defOut = draft.out;
+  }
+  const inMin = addDays(today, -(STAY_MAX_NIGHTS - 1));
+  const inMax = addDays(today, 1);
+  const outR = stayOutRange(validIso(defIn) ? defIn : today);
   return '<section class="panel"><div class="card consent-card">'
     + '<h2>'+ICON.clock+s.title+'</h2>'
     + '<p class="lead">'+s.lead+'</p>'
     + '<div class="stayform">'
-      + '<div class="stayfield"><label for="stayIn">'+s.checkin+'</label><input type="date" id="stayIn" value="'+defIn+'"'+(lockIn ? ' disabled' : '')+'></div>'
-      + '<div class="stayfield"><label for="stayOut">'+s.checkout+'</label><input type="date" id="stayOut" value="'+defOut+'"></div>'
+      + '<div class="stayfield"><label for="stayIn">'+s.checkin+'</label><input type="date" id="stayIn" value="'+defIn+'"'+(lockIn ? ' disabled' : ' min="'+inMin+'" max="'+inMax+'"')+'></div>'
+      + '<div class="stayfield"><label for="stayOut">'+s.checkout+'</label><input type="date" id="stayOut" value="'+defOut+'" min="'+outR.min+'" max="'+outR.max+'"></div>'
       + '<p class="stayerror" id="stayError" role="alert" hidden></p>'
       + '<p class="staynote">'+s.note+'</p>'
       + '<div class="stayactions"><button type="button" class="btn primary" data-action="submitStay">'+ICON.check+(fresh ? s.go : s.save)+'</button>'
