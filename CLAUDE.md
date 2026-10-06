@@ -28,6 +28,12 @@
 - お部屋: 102号室(最大8名・バリアフリー)/ 201号室(最大12名・屋上テラス)/ 202号室(最大10名・ファミリー向け)
 - Wi-Fi SSID/パスワードは、スプレッドシート「satsukian_guide_content」の「Wi-Fi_接続情報」シートが正。
 
+## 「ご案内」の写真(2026年10月6日追加)
+
+- 外観と景色の写真は `index.html` 内の `const GUIDE_PHOTOS = {exterior, view}` に `data:image/jpeg;base64,...` で埋め込む。幅800px・JPEG品質80に縮小し、撮影情報(EXIF)を消してから入れる。
+- 外観はヒーロー上部(`.hero-photo`、スマホ幅で高さ155px)、景色は「ご案内」カードの下(`.guidefig`)。説明文と代替テキストは `T` の各言語の `photos`(スプレッドシートでは「ご案内」シートの「写真の説明文」「写真の代替テキスト」の行)。
+- デザインは Pencil(VS Code 拡張「pen.dev」、High Agency)の `design/guide.pen` で作った(案B'を採用)。`design/` フォルダ(`.pen` と元写真)はオーナーのパソコンにだけ置き、公開リポジトリにはアップロードしない。
+
 ## 「おすすめ」タブ(宿泊者限定のお店・割引)
 
 - お店のデータは `index.html` 内の `const SHOPS = [...]` に1店ずつ入れる。`cat` は `food` / `car` / `activity`。文言は `{ja, en, zh, ko}` の4言語で持ち、`line` / `web` / `map` / `closed` / `distance` は空ならボタン・行を出さない。
